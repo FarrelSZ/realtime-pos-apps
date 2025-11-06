@@ -20,6 +20,7 @@ export default async function DetailOrderPage({ params }: { params: Promise<{ id
         src={`${environment.MIDTRANS_API_URL}/snap/snap.js`}
         data-client-key={environment.MIDTRANS_CLIENT_KEY}
         strategy="lazyOnload"
+        // unsafe-inline (kalo midtrans gabisa)
       />
       <DetailOrder id={id} />
     </div>
