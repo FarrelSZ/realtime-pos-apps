@@ -56,30 +56,10 @@ export default function Summary({
     }
 
     if (generatePaymentState?.status === "success") {
-      window.snap.pay(generatePaymentState.data.payment_token, {
-        onSuccess: function () {
-          // Pembayaran berhasil
-          toast.success("Payment successful!");
-          window.location.href = `/order/${id}?payment=success`;
-        },
-        onPending: function () {
-          // Pembayaran pending
-          toast.info("Payment pending");
-          window.location.href = `/order/${id}?payment=pending`;
-        },
-        onError: function () {
-          // Pembayaran error
-          toast.error("Payment failed");
-          window.location.reload();
-        },
-        onClose: function () {
-          // User menutup popup sebelum selesai
-          toast.info("Payment cancelled");
-          window.location.reload(); // Refresh untuk update status dari server
-        },
-      });
+      window.snap.pay(generatePaymentState.data.payment_token);
     }
-  }, [generatePaymentState, id]);
+  }, [generatePaymentState]);
+
   return (
     <Card className="w-full shadow-sm">
       <CardContent className="space-y-4">
@@ -121,12 +101,12 @@ export default function Summary({
               <Button
                 type="submit"
                 onClick={handleGeneratePayment}
-                disabled={!isAllServed || isPendingGeneratePayment || grandTotal === 0}
+                disabled={!isAllServed || isPendingGeneratePayment || orderMenu?.length === 0}
                 className="w-full font-semibold bg-teal-500 hover:bg-teal-600 text-white cursor-pointer"
               >
                 {isPendingGeneratePayment ? <Loader2 className="animate-spin" /> : "Pay"}
               </Button>
-              {grandTotal === 0 && (
+              {orderMenu?.length === 0 && (
                 <p className="text-xs text-muted-foreground text-center">Cannot process payment with zero amount</p>
               )}
             </>
