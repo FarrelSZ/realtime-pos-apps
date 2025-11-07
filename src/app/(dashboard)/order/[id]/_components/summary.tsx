@@ -23,7 +23,7 @@ export default function Summary({
     tables: { name: string }[];
     status: string;
   };
-  orderMenu: { menus: Menu; quantity: number; status: string }[] | null | undefined;
+  orderMenu: { menus: Menu; quantity: number; status: string; nominal: number }[] | null | undefined;
   id: string;
 }) {
   const { grandTotal, totalPrice, tax, service } = usePricing(orderMenu);
@@ -72,7 +72,7 @@ export default function Summary({
             </div>
             <div className="space-y-2">
               <Label>Table</Label>
-              <Input value={(order?.tables as unknown as { name: string })?.name} disabled />
+              <Input value={(order?.tables as unknown as { name: string })?.name || "Takeaway"} disabled />
             </div>
           </div>
         )}

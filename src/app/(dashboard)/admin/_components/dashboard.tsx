@@ -44,23 +44,21 @@ export default function Dashboard() {
     queryFn: async () => {
       const { data: dataThisMonth } = await supabase
         .from("orders_menus")
-        .select("quantity, menus (price), created_at")
+        .select("nominal, created_at")
         .gte("created_at", thisMonth);
 
       const { data: dataLastMonth } = await supabase
         .from("orders_menus")
-        .select("quantity, menus (price), created_at")
+        .select("nominal, created_at")
         .gte("created_at", lastMonth)
         .lt("created_at", thisMonth);
 
       const totalRevenueThisMonth = (dataThisMonth ?? []).reduce((sum, item) => {
-        const price = (item.menus as unknown as { price: number }).price;
-        return sum + price * item.quantity;
+        return sum + item.nominal;
       }, 0);
 
       const totalRevenueLastMonth = (dataLastMonth ?? []).reduce((sum, item) => {
-        const price = (item.menus as unknown as { price: number }).price;
-        return sum + price * item.quantity;
+        return sum + item.nominal;
       }, 0);
 
       const growthRate =
@@ -173,15 +171,15 @@ export default function Dashboard() {
           <div className="px-6">
             {lastOrder ? (
               lastOrder.map((order) => (
-                <div key={order.id} className="flex items-center gap-4 justify-between mb-4">
+                <div key={order?.id} className="flex items-center gap-4 justify-between mb-4">
                   <div>
-                    <h3 className="font-semibold">{order.customer_name}</h3>
+                    <h3 className="font-semibold">{order?.customer_name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Table: {(order.tables as unknown as { name: string }).name}
+                      Table: {(order?.tables as unknown as { name: string })?.name}
                     </p>
-                    <p className="text-sm text-muted-foreground">Order ID: {order.id}</p>
+                    <p className="text-sm text-muted-foreground">Order ID: {order?.id}</p>
                   </div>
-                  <Link href={`/order/${order.order_id}`}>
+                  <Link href={`/order/${order?.order_id}`}>
                     <Button className="mt-2" size="sm">
                       Detail
                     </Button>

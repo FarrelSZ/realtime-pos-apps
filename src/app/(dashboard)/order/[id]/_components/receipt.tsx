@@ -16,7 +16,7 @@ const Receipt = ({
     status: string;
     created_at: string;
   };
-  orderMenu: { menus: Menu; quantity: number; status: string; id: string }[] | null | undefined;
+  orderMenu: { menus: Menu; quantity: number; status: string; id: string; nominal: number }[] | null | undefined;
   orderId: string;
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);

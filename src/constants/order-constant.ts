@@ -17,6 +17,17 @@ export const INITIAL_STATE_ORDER = {
     _form: [],
   },
 };
+export const INITIAL_ORDER_TAKE_AWAY = {
+  customer_name: "",
+};
+
+export const INITIAL_STATE_ORDER_TAKE_AWAY = {
+  status: "idle",
+  errors: {
+    customer_name: [],
+    _form: [],
+  },
+};
 
 export const STATUS_CREATE_ORDER = [
   {

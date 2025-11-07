@@ -68,6 +68,8 @@ export default function AddOrderItem({ id }: { id: string }) {
 
   const handleAddToCart = (menu: Menu, action: "increment" | "decrement") => {
     const existingItem = carts.find((item) => item.menu_id === menu.id);
+    const priceAfterDiscount = menu.price - menu.price * ((menu.discount || 0) / 100);
+
     if (existingItem) {
       if (action === "decrement") {
         if (existingItem.quantity > 1) {
@@ -77,7 +79,7 @@ export default function AddOrderItem({ id }: { id: string }) {
                 ? {
                     ...item,
                     quantity: item.quantity - 1,
-                    total: item.total - menu.price,
+                    nominal: item.nominal - priceAfterDiscount,
                   }
                 : item
             )
@@ -92,14 +94,23 @@ export default function AddOrderItem({ id }: { id: string }) {
               ? {
                   ...item,
                   quantity: item.quantity + 1,
-                  total: item.total + menu.price,
+                  nominal: item.nominal + priceAfterDiscount,
                 }
               : item
           )
         );
       }
     } else {
-      setCarts([...carts, { menu_id: menu.id, quantity: 1, total: menu.price, notes: "", menu }]);
+      setCarts([
+        ...carts,
+        {
+          menu_id: menu.id,
+          quantity: 1,
+          nominal: priceAfterDiscount,
+          notes: "",
+          menu,
+        },
+      ]);
     }
   };
 
