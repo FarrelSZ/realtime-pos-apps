@@ -22,13 +22,13 @@ export default function Summary({
     customer_name: string;
     tables: { name: string }[];
     status: string;
+    payment_token: string;
   };
   orderMenu: { menus: Menu; quantity: number; status: string; nominal: number }[] | null | undefined;
   id: string;
 }) {
   const { grandTotal, totalPrice, tax, service } = usePricing(orderMenu);
   const profile = useAuthStore((state) => state.profile);
-
   const isAllServed = useMemo(() => {
     return orderMenu?.every((item) => item.status === "served");
   }, [orderMenu]);
@@ -39,13 +39,17 @@ export default function Summary({
   );
 
   const handleGeneratePayment = () => {
-    const formData = new FormData();
-    formData.append("id", id || "");
-    formData.append("gross_amount", grandTotal.toString());
-    formData.append("customer_name", order?.customer_name || "");
-    startTransition(() => {
-      generatePaymentAction(formData);
-    });
+    if (order?.payment_token) {
+      window.snap.pay(order.payment_token);
+    } else {
+      const formData = new FormData();
+      formData.append("id", id || "");
+      formData.append("gross_amount", grandTotal.toString());
+      formData.append("customer_name", order?.customer_name || "");
+      startTransition(() => {
+        generatePaymentAction(formData);
+      });
+    }
   };
 
   useEffect(() => {
@@ -59,7 +63,6 @@ export default function Summary({
       window.snap.pay(generatePaymentState.data.payment_token);
     }
   }, [generatePaymentState]);
-
   return (
     <Card className="w-full shadow-sm">
       <CardContent className="space-y-4">
@@ -97,19 +100,14 @@ export default function Summary({
             <p className="text-lg font-semibold">{convertIDR(grandTotal)}</p>
           </div>
           {order?.status === "process" && profile.role !== "kitchen" && (
-            <>
-              <Button
-                type="submit"
-                onClick={handleGeneratePayment}
-                disabled={!isAllServed || isPendingGeneratePayment || orderMenu?.length === 0}
-                className="w-full font-semibold bg-teal-500 hover:bg-teal-600 text-white cursor-pointer"
-              >
-                {isPendingGeneratePayment ? <Loader2 className="animate-spin" /> : "Pay"}
-              </Button>
-              {orderMenu?.length === 0 && (
-                <p className="text-xs text-muted-foreground text-center">Cannot process payment with zero amount</p>
-              )}
-            </>
+            <Button
+              type="submit"
+              onClick={handleGeneratePayment}
+              disabled={!isAllServed || isPendingGeneratePayment || orderMenu?.length === 0}
+              className="w-full font-semibold bg-teal-500 hover:bg-teal-600 text-white cursor-pointer"
+            >
+              {isPendingGeneratePayment ? <Loader2 className="animate-spin" /> : "Pay"}
+            </Button>
           )}
         </div>
       </CardContent>
