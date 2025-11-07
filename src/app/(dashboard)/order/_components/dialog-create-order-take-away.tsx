@@ -1,10 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { createOrderTakeAway } from "../actions";
 import { toast } from "sonner";
-import { orderTakeAwayForm, orderTakeAwayFormSchema } from "@/validations/order-validation";
-import { INITIAL_ORDER_TAKE_AWAY, INITIAL_STATE_ORDER_TAKE_AWAY } from "@/constants/order-constant";
+import { OrderTakeawayForm, orderTakeawayFormSchema } from "@/validations/order-validation";
 import {
   DialogClose,
   DialogContent,
@@ -17,15 +15,17 @@ import { Form } from "@/components/ui/form";
 import FormInput from "@/components/common/form-input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { INITIAL_ORDER_TAKE_AWAY, INITIAL_STATE_ORDER_TAKE_AWAY } from "@/constants/order-constant";
+import { createOrderTakeaway } from "../actions";
 
-export default function DialogCreateOrderTakeAway({ closeDialog }: { closeDialog: () => void }) {
-  const form = useForm<orderTakeAwayForm>({
-    resolver: zodResolver(orderTakeAwayFormSchema),
+export default function DialogCreateOrderTakeaway({ closeDialog }: { closeDialog: () => void }) {
+  const form = useForm<OrderTakeawayForm>({
+    resolver: zodResolver(orderTakeawayFormSchema),
     defaultValues: INITIAL_ORDER_TAKE_AWAY,
   });
 
   const [createOrderState, createOrderAction, isPendingCreateOrder] = useActionState(
-    createOrderTakeAway,
+    createOrderTakeaway,
     INITIAL_STATE_ORDER_TAKE_AWAY
   );
 
@@ -58,7 +58,7 @@ export default function DialogCreateOrderTakeAway({ closeDialog }: { closeDialog
     <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
       <Form {...form}>
         <DialogHeader>
-          <DialogTitle>Create Order Take Away</DialogTitle>
+          <DialogTitle>Create Order Takeaway</DialogTitle>
           <DialogDescription>Add a new order from customer</DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">

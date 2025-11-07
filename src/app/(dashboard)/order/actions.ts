@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { FormState } from "@/types/general";
 import { Cart, OrderFormState } from "@/types/order";
-import { orderFormSchema, orderTakeAwayFormSchema } from "@/validations/order-validation";
+import { orderFormSchema, orderTakeawayFormSchema } from "@/validations/order-validation";
 import { redirect } from "next/navigation";
 import midtrans from "midtrans-client";
 import { environment } from "@/configs/environment";
@@ -61,8 +61,9 @@ export async function createOrder(prevState: OrderFormState, formData: FormData)
     status: "success",
   };
 }
-export async function createOrderTakeAway(prevState: OrderFormState, formData: FormData) {
-  const validatedFields = orderTakeAwayFormSchema.safeParse({
+
+export async function createOrderTakeaway(prevState: OrderFormState, formData: FormData) {
+  const validatedFields = orderTakeawayFormSchema.safeParse({
     customer_name: formData.get("customer_name"),
   });
 
