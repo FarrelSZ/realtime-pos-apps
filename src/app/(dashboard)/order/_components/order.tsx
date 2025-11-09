@@ -149,7 +149,6 @@ export default function OrderManagement() {
 
     if (reservedState?.status === "success") {
       toast.success("Update Reservation Success");
-      refetchOrders();
     }
   }, [reservedState]);
 
@@ -274,7 +273,13 @@ export default function OrderManagement() {
         </TabsContent>
 
         <TabsContent value="map">
-          <TableMap tables={tables || []} activeOrders={activeOrders || []} />
+          <TableMap
+            tables={tables || []}
+            activeOrders={activeOrders || []}
+            handleReservation={(id: string, table_id: string, status: string) => {
+              handleReservation({ id, table_id, status: "canceled" });
+            }}
+          />
         </TabsContent>
       </Tabs>
     </div>
